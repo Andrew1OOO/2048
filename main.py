@@ -51,7 +51,7 @@ pos = (-5,0)
 
 
 board1 =[[0,create_blocks.block3,0,create_blocks.block2],
-        [0,0,0,0],
+        [create_blocks.block1,0,0,0],
         [0,0,0,0],
         [0,0,0,0]]
 

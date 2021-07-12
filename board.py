@@ -32,10 +32,10 @@ class Board:
 
             j=0
             while(j < len(v)):
-                
                 if(j < len(v) - 1 and v[j].size == v[j+1].size):
                     v[j].set_size(v[j].size*2)
                     w.append(v[j])
+                    j+=1
                 else:
                     w.append(v[j])
                 j += 1
@@ -100,7 +100,7 @@ class Board:
                     
 
                     if (j < len(v) - 1 and v[j].size == v[j + 1].size):
-                        v[j].size = v[j].size*2
+                        v[j].set_size(v[j].size*2)
                         w.append(v[j])
                         j += 1
                     
@@ -130,8 +130,8 @@ class Board:
                 while(j < len(v)):
     
                     
-                    if (j <len( v) - 1 and v[j].size == v[j].size + 1):
-                        v[j].size = v[j].size * 2
+                    if (j <len( v) - 1 and v[j].size == v[j+1].size):
+                        v[j].set_size(v[j].size*2)
 
                         w.append(v[j])
                         j += 1
