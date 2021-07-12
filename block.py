@@ -1,67 +1,75 @@
+from board import Board
 import pygame
-from pygame.constants import BLEND_RGB_ADD, BLEND_RGB_MAX, BLEND_RGB_MIN, SRCALPHA
+import color_constants
+
 
 class Block:
-    def __init__(self, size, color, rect):
+    def __init__(self, size, rect):
         self.size = size
-        self.color = color
+        self.color = self.find_color()
+        
         self.BLACK = (0, 0, 0)
         self.rect = rect
     def set_size(self, size):
         self.size = size
-    
+
+    def find_color(self):
+        color = (0,0,0)
+        if(self.size == 2):
+            color = color_constants.block_2
+        if(self.size == 4):
+            color = color_constants.block_4
+        if(self.size == 8):
+            color = color_constants.block_8
+        if(self.size == 16):
+            color = color_constants.block_16
+        if(self.size == 32):
+            color = color_constants.block_32
+        if(self.size == 64):
+            color = color_constants.block_64
+        if(self.size == 128):
+            color = color_constants.block_128
+        if(self.size == 256):
+            color = color_constants.block_256
+        if(self.size == 512):
+            color = color_constants.block_512
+        if(self.size == 1024):
+            color = color_constants.block_1024
+        if(self.size == 2048):
+            color = color_constants.block_2048
+        return color
     def merge(self, block2):
         self.size += block2.size
         block2.destroy()
 
     def destroy(self):
         self.size = 0
-        self.color = 0
+        self.color = (146,146,146)
     
+    def set_color(self,color):
+        self.color = color
 
-
-    def draw(self, surface, radius=0.4):
-        
-        '''rect = self.rect
-        colour = pygame.Color(*self.color)
-        alpha = colour.a
-        colour.a = 0
-        pos = rect.topleft
-        rect.topleft = 0, 0
-        rectangle = pygame.Surface(rect.size, SRCALPHA)
-
-        circle = pygame.Surface([min(rect.size) * 3] * 2, SRCALPHA)
-        pygame.draw.ellipse(circle, self.BLACK, circle.get_rect(), 0)
-        circle = pygame.transform.smoothscale(
-            circle, [int(min(rect.size)*radius)]*2)
-
-        radius = rectangle.blit(circle, (0, 0))
-        radius.bottomright = rect.bottomright
-        rectangle.blit(circle, radius)
-        radius.topright = rect.topright
-        rectangle.blit(circle, radius)
-        radius.bottomleft = rect.bottomleft
-        rectangle.blit(circle, radius)
-
-        rectangle.fill(self.BLACK, rect.inflate(-radius.w, 0))
-        rectangle.fill(self.BLACK, rect.inflate(0, -radius.h))
-
-        rectangle.fill(colour, special_flags=BLEND_RGB_MAX)
-        rectangle.fill((255, 255, 255, alpha), special_flags=BLEND_RGB_MIN)
-
-        surface.blit(rectangle, pos)'''
-
-        #print(self.rect.x)
-        i=30
-        while i > 5:
-            pygame.draw.rect(surface, self.color,pygame.Rect(self.rect.x, self.rect.y,i,i),2,3)
-            i -=1
-
-    def erase_rect(self,surface):
-        
-        pygame.draw.rect(surface,(0,0,0),pygame.Rect(self.rect.x, self.rect.y,30,30))
-
-    def move(self, surface, pos):
-        self.erase_rect(surface)
-        self.rect.center = (pos[0]+15, pos[1]+15)
-
+    def draw(self, surface, board):
+        if(self.size > 0):
+            for i in range(len(board)):
+                for j in range(len(board[0])):
+                    if(board[i][j] != 0):
+                        pos = Board.center(Board.decrypt(Board, j, i))
+                        k=50
+                        while k > 5:
+                            
+                            pygame.draw.rect(surface, board[i][j].color,pygame.Rect(pos[0],pos[1],k,k),2,3)
+                            k -=1
+                    self.repaint(surface, board)
+    def repaint(self,surface,board):
+        for i in range(len(board)):
+            for j in range(len(board[0])):
+                if(board[i][j] != 0):
+                    pass
+                else:
+                    pos = Board.decrypt(Board, j, i)
+                    k=55
+                    while k > 5:
+                        pygame.draw.rect(surface, (146,146,146),pygame.Rect(pos[0],pos[1],k,k),2,3)
+                        k -=1
+    
