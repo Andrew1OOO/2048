@@ -1,18 +1,22 @@
 import random, pygame
-class Board:
+from block import Block
+class Board():
 
-    def __init__(self, board):
-        self.board = list(board)
-
-    def new_turn(self, block):
-        for i in range(16):
-            x,y = random.randint(0,3)
-            if(self.board[x][y] == 0):
-                self.board[x][y] = block
-                break
-    def check_end(self):
-        pass
-    
+    def __init__(self):
+        self.board = self.create_board()
+        
+    def printb(self):
+        for i in range(4):
+            print(str(i+1) + "| ", *self.board[i], sep=' ')
+    def create_board(self):
+        board1 =[[0,0,0,0],
+                [0,0,0,0],
+                [0,0,0,0],
+                [0,0,0,0]]
+        board1[random.randint(0,3)][random.randint(0,3)] = Block(4,pygame.Rect(0,0, 60, 60))
+        board1[random.randint(0,3)][random.randint(0,3)] = Block(2,pygame.Rect(0,0, 60, 60))
+        board1[random.randint(0,3)][random.randint(0,3)] = Block(2,pygame.Rect(0,0, 60, 60))
+        return board1
     def add_block(self, block):
         for i in range(16):
             rand_pos = (random.randint(0,3), random.randint(0,3))
@@ -153,12 +157,19 @@ class Board:
                 for it in w:
                     self.board[j][i] = it
                     j -= 1
-    def move(self, from_, pos):
-        move = self.encrypt(pos)
-        temp = self.board[move[0]][move[1]] 
-        self.board[move[0]][move[1]] = self.board[from_[0]][from_[1]]
-        self.board[from_[0]][from_[1]] = temp
-        return True
+    def move(self, move):
+        if move == "L":
+            self.shift_left()
+            #self.add_block(Block(2 * random.randint(1,2), pygame.Rect(0,0, 60, 60)))
+        if move == "R":
+            self.shift_right()
+            #self.add_block(Block(2 * random.randint(1,2), pg.Rect(0,0, 60, 60)))
+        if move == "U":
+            self.shift_vertical(True)
+            #self.add_block(Block(2 * random.randint(1,2), pg.Rect(0,0, 60, 60)))
+        if move == "D":
+            self.shift_vertical(False)
+            #self.add_block(Block(2 * random.randint(1,2), pg.Rect(0,0, 60, 60)))
 
     def encrypt(self, pos):
         origin = (75,75)
@@ -172,40 +183,41 @@ class Board:
                     return i,j
                 
 
-    def decrypt(self, i,j):
+    
+    
+    def game_over(self):
+        for i in range(4):
+            for j in range(4):
+                if(self.board[i][j]!= 0):
 
-        if(i == 0 and j == 0):
-            return 8,8
-        if(i == 1 and j == 0):
-            return 84,8
-        if(i == 2 and j == 0):
-            return 160,8
-        if(i == 3 and j == 0):
-            return 236,8
-        if(i == 0 and j == 1):
-            return 8,84
-        if(i == 0 and j == 2):
-            return 8,160
-        if(i == 0 and j == 3):
-            return 8,236
-        if(i == 1 and j == 1):
-            return 84,84
-        if(i == 2 and j == 1):
-            return 160,84
-        if(i == 1 and j == 2):
-            return 84,160
-        if(i == 1 and j == 3):
-            return 84,236
-        if(i == 3 and j == 1):
-            return 236,84
-        if(i == 2 and j == 2):
-            return 160,160
-        if(i == 2 and j == 3):
-            return 160,236
-        if(i == 3 and j == 2):
-            return 236,160
-        if(i == 3 and j == 3):
-            return 236,236
+                    if(self.board[i][j].size == 2048):
+                        return True
 
-    def center(i):
-        return i[0]+4, i[1]+5
+        for i in range(4):
+            for j in range(4):
+                if(self.board[i][j]== 0):
+                    return False
+            
+        for i in range(3):
+            for j in range(3):
+                if(self.board[i][j].size== self.board[i + 1][j].size or self.board[i][j].size== self.board[i][j + 1].size):
+                    return False
+    
+        for j in range(3):
+            if(self.board[3][j].size== self.board[3][j + 1].size):
+                return False
+    
+        for i in range(3):
+            if(self.board[i][3].size== self.board[i + 1][3].size):
+                return False
+    
+        return True
+    
+
+    def get_score(self):
+        score = 0
+        for i in range(len(self.board)):
+            for j in range(len(self.board)):
+                if self.board[i][j] != 0:
+                    score += self.board[i][j].size
+        return score

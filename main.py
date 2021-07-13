@@ -1,6 +1,6 @@
 from board import Board
 from block import Block
-import create_blocks
+import copy
 import random
 import pygame as pg
 
@@ -31,6 +31,77 @@ def round_rect(surf, rect, rad, color, thick=0):
 		pg.draw.rect(surf, color, r.inflate(rad*2, 0))
 		pg.draw.rect(surf, color, r.inflate(0, rad*2))
 
+
+def find_best_move(board):
+    possible_moves = ["L", "R", "U", "D"]
+    totalSims = 100
+
+    simScore = [0,0,0,0]
+    inter = 0
+    for i in range(int(totalSims)):
+        #print("New simulation")
+        if(inter == 4):
+            inter = 0
+        simulation = Board()
+        simulation.board = copy.deepcopy(board)
+        
+        simulation.move(possible_moves[inter])
+        simulation.add_block(Block(2 * random.randint(1,2), pg.Rect(0,0, 60, 60)))
+
+        while((simulation.game_over() == False)):
+            simulation.move(possible_moves[random.randint(0,3)])
+            simulation.add_block(Block(2 * random.randint(1,2), pg.Rect(0,0, 60, 60)))
+
+
+        simScore[inter] += simulation.get_score()
+        inter += 1
+    topScore = max(simScore)
+    #print("SimScore",simScore)
+    #print("possile",possible_moves)
+
+    index = simScore.index(topScore)
+    bestMove = possible_moves[index]
+
+    return bestMove
+
+def simulate():
+    possible_moves = ["L", "R", "U", "D"]
+    totalSims = 24
+
+    simScore = [0,0,0,0]
+    inter = 0
+    for i in range(int(totalSims/4)):
+        print("New simulation")
+        if(inter == 4):
+            inter = 0
+        simulation = Board()
+        simulation.move(possible_moves[inter])
+        simulation.add_block(Block(2 * random.randint(1,2), pg.Rect(0,0, 60, 60)))
+
+        while((simulation.game_over() == False)):
+            
+            
+            simulation.move(possible_moves[random.randint(0,3)])
+            simulation.add_block(Block(2 * random.randint(1,2), pg.Rect(0,0, 60, 60)))
+
+            surface.blit(board, (75, 75))
+
+            simulation.paint(board)
+            pg.display.update()
+        
+            pg.display.flip()
+            clock.tick(30)
+        simScore[inter] += simulation.get_score()
+        inter += 1
+    topScore = max(simScore)
+    print("SimScore",simScore)
+    print("possile",possible_moves)
+
+    index = simScore.index(topScore)
+    bestMove = possible_moves[index]
+
+    return bestMove
+
 pg.init()
 surface = pg.display.set_mode((450, 450))
 clock = pg.time.Clock()
@@ -50,23 +121,21 @@ pos = (-5,0)
 
 
 
-board1 =[[0,create_blocks.block3,0,create_blocks.block2],
-        [create_blocks.block1,0,0,0],
-        [0,0,0,0],
-        [0,0,0,0]]
 
 
-act_board = Board(board1)
+act_board = Board()
 
 
-for i in range(len(board1)):
-    for j in range(len(board1[0])):
+for i in range(4):
+    for j in range(4):
         k=60
         while k > 5:
             pg.draw.rect(board, (146,146,146),pg.Rect((j*75)+8, (i*75)+8, k,k),2,3)
             k -= 1
 
+#x = simulate()
 
+play = False
 while not game_exit:
     for event in pg.event.get():
         if event.type == pg.QUIT:
@@ -88,11 +157,15 @@ while not game_exit:
                 act_board.shift_vertical(True)
                 act_board.add_block(Block(2 * random.randint(1,2), pg.Rect(0,0, 60, 60)))
 
+    if(not play):
+        l = find_best_move(act_board.board)
+        act_board.move(l)
+        act_board.add_block(Block(2 * random.randint(1,2), pg.Rect(0,0, 60, 60)))
+
     surface.blit(board, (75, 75))
 
 
     act_board.paint(board)
-
 
 
     pg.display.update()
