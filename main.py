@@ -78,16 +78,16 @@ while not game_exit:
         if event.type == pg.KEYDOWN:
             if event.key == pg.K_LEFT:
                 act_board.shift_left()
-                act_board.add_block(Block(2, pg.Rect(0,0, 60, 60)))
+                act_board.add_block(Block(2 * random.randint(1,2), pg.Rect(0,0, 60, 60)))
             if event.key == pg.K_RIGHT:
                 act_board.shift_right()
-                act_board.add_block(Block(2, pg.Rect(0,0, 60, 60)))
+                act_board.add_block(Block(2 * random.randint(1,2), pg.Rect(0,0, 60, 60)))
             if event.key == pg.K_DOWN:
                 act_board.shift_vertical(False)
-                act_board.add_block(Block(2, pg.Rect(0,0, 60, 60)))
+                act_board.add_block(Block(2 * random.randint(1,2), pg.Rect(0,0, 60, 60)))
             if event.key == pg.K_UP:
                 act_board.shift_vertical(True)
-                act_board.add_block(Block(2, pg.Rect(0,0, 60, 60)))
+                act_board.add_block(Block(2 * random.randint(1,2), pg.Rect(0,0, 60, 60)))
 
     surface.blit(board, (75, 75))
 
