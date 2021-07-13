@@ -190,8 +190,6 @@ class Board():
                 if pos[0] <= start[0]+size+8 and pos[1] <= start[1]+size+8 and pos[0] >= start[0]+8 and pos[1] >= start[1]+8:
                     return i,j
                 
-
-    
     
     def game_over(self):
         for i in range(4):

@@ -49,7 +49,7 @@ class Block:
         self.color = color
 
     def draw(self, surface, board):
-        Font=pygame.font.SysFont('Corbel',  20)
+        Font=pygame.font.SysFont('dubai',  20)
         
 
         if(self.size > 0):

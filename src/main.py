@@ -34,7 +34,7 @@ def round_rect(surf, rect, rad, color, thick=0):
 
 def find_best_move(board):
     possible_moves = ["L", "R", "U", "D"]
-    totalSims = 200
+    totalSims = 48
 
     simScore = [0,0,0,0]
     inter = 0
