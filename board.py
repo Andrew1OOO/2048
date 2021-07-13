@@ -13,8 +13,12 @@ class Board:
     def check_end(self):
         pass
     
-    def add_block(self, block, pos):
-        self.board[pos[0]][pos[1]] = block 
+    def add_block(self, block):
+        for i in range(16):
+            rand_pos = (random.randint(0,3), random.randint(0,3))
+            if(self.board[rand_pos[0]][rand_pos[1]] == 0):
+                self.board[rand_pos[0]][rand_pos[1]] = block 
+                return True
 
     def paint(self, surface):
         for i in range(len(self.board)):
