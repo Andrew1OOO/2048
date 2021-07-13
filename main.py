@@ -3,7 +3,6 @@ from block import Block
 import create_blocks
 import random
 import pygame as pg
-from pygame.constants import BLEND_RGB_ADD, BLEND_RGB_MAX, SRCALPHA
 
 game_exit = False
 BLACK = (0 ,0, 0)
@@ -65,7 +64,7 @@ for i in range(len(board1)):
         k=60
         while k > 5:
             pg.draw.rect(board, (146,146,146),pg.Rect((j*75)+8, (i*75)+8, k,k),2,3)
-            k -=1
+            k -= 1
 
 
 while not game_exit:
