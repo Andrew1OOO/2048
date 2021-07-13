@@ -34,7 +34,7 @@ def round_rect(surf, rect, rad, color, thick=0):
 
 def find_best_move(board):
     possible_moves = ["L", "R", "U", "D"]
-    totalSims = 100
+    totalSims = 200
 
     simScore = [0,0,0,0]
     inter = 0
@@ -123,8 +123,9 @@ pos = (-5,0)
 
 
 
-act_board = Board()
-
+act_board = Board() 
+sim = False
+play = False
 
 for i in range(4):
     for j in range(4):
@@ -133,10 +134,12 @@ for i in range(4):
             pg.draw.rect(board, (146,146,146),pg.Rect((j*75)+8, (i*75)+8, k,k),2,3)
             k -= 1
 
-#x = simulate()
 
-play = False
-while not game_exit:
+if sim:
+    x = simulate()
+
+
+while not game_exit and not sim:
     for event in pg.event.get():
         if event.type == pg.QUIT:
             game_exit = True
@@ -156,7 +159,10 @@ while not game_exit:
             if event.key == pg.K_UP:
                 act_board.shift_vertical(True)
                 act_board.add_block(Block(2 * random.randint(1,2), pg.Rect(0,0, 60, 60)))
+            if event.key == pg.K_c:
+                act_board.clear()
 
+    #this is the code that makes the computer play, change play to True to play the game, play if defined above the while
     if(not play):
         l = find_best_move(act_board.board)
         act_board.move(l)

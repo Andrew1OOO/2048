@@ -17,6 +17,14 @@ class Board():
         board1[random.randint(0,3)][random.randint(0,3)] = Block(2,pygame.Rect(0,0, 60, 60))
         board1[random.randint(0,3)][random.randint(0,3)] = Block(2,pygame.Rect(0,0, 60, 60))
         return board1
+    def clear(self):
+        self.board =[[0,0,0,0],
+                [0,0,0,0],
+                [0,0,0,0],
+                [0,0,0,0]]
+        self.board[random.randint(0,3)][random.randint(0,3)] = Block(4,pygame.Rect(0,0, 60, 60))
+        self.board[random.randint(0,3)][random.randint(0,3)] = Block(2,pygame.Rect(0,0, 60, 60))
+        self.board[random.randint(0,3)][random.randint(0,3)] = Block(2,pygame.Rect(0,0, 60, 60))
     def add_block(self, block):
         for i in range(16):
             rand_pos = (random.randint(0,3), random.randint(0,3))
