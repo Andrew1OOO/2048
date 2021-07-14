@@ -56,7 +56,7 @@ def find_best_move(board, amount):
             simulation.board = copy.deepcopy(board)
             
             simulation.move(m)
-            simulation.add_block(Block(2 * random.randint(1,2), pg.Rect(0,0, 60, 60)), mode)
+            simulation.add_block(Block(2 * random.randint(1,2), pg.Rect(0,0, 60, 60), mode))
 
             while((simulation.game_over() == False)):
                 simulation.move(possible_moves[random.randint(0,3)])
@@ -90,7 +90,6 @@ mode = True
 def simulate(x = False):
 
     game_exit = False
-    BLACK = (0 ,0, 0)
     colors = Colors(mode)
     pg.init()
     surface = pg.display.set_mode((450, 450))
@@ -115,7 +114,7 @@ def simulate(x = False):
     Font = pg.freetype.SysFont('Sans', 50)
     lblrect = Font.get_rect("2048")
     lblrect.center = (85,30)
-    lbled = Font.render_to(surface, lblrect.center, "2048", colors.letter)
+    lbled = Font.render_to(surface, lblrect.center, "2048", colors.block_E)
 
 
 

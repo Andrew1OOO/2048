@@ -199,12 +199,6 @@ class Board():
                 
     
     def game_over(self):
-        for i in range(4):
-            for j in range(4):
-                if(self.board[i][j]!= 0):
-
-                    if(self.board[i][j].size == 2048):
-                        return True
 
         for i in range(4):
             for j in range(4):
