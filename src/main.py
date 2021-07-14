@@ -76,8 +76,9 @@ def find_best_move(board, amount):
 
 
 
-def QUIT():
-    root.destroy()
+def darkmode():
+    global mode
+    mode = True
 
 
 
@@ -86,7 +87,7 @@ def QUIT():
 global amount_sims
 amount_sims = 0
 global mode
-mode = True
+mode = False
 def simulate(x = False):
 
     game_exit = False
@@ -207,8 +208,8 @@ txtfld.place(x=80, y=150)
 
 
 
-button1 = Button(root,text = 'Quit',  command=QUIT)
-button1.place(x=360, y=5)
+button1 = Button(root,text = 'Dark Mode',  command=darkmode)
+button1.place(x=320, y=5)
 
 button2 = Button(root,text = 'Simulate',  command=simulate)
 button2.place(x=80, y=180)
