@@ -1,46 +1,49 @@
 import pygame
-import color_constants
+from color_constants import Colors
 import pygame.freetype
 
 class Block:
-    def __init__(self, size, rect):
+    def __init__(self, size, rect, dMode):
         self.size = size
-        self.color = self.find_color(self.size)
-        
+        self.colors = Colors(dMode)
+        self.color = self.find_color(self.size, dMode)
+        self.dMode = dMode
         self.BLACK = (0, 0, 0)
         self.rect = rect
+        
     def set_size(self, size):
         self.size = size
 
-    def find_color(self,size):
+    def find_color(self,size, darkMode):
         color = (0,0,0)
+        
         if(size == 2):
-            color = color_constants.block_2
+            color = self.colors.block_2
         if(size == 4):
-            color = color_constants.block_4
+            color = self.colors.block_4
         if(size == 8):
-            color = color_constants.block_8
+            color = self.colors.block_8
         if(size == 16):
-            color = color_constants.block_16
+            color = self.colors.block_16
         if(size == 32):
-            color = color_constants.block_32
+            color =self.colors.block_32
         if(size == 64):
-            color = color_constants.block_64
+            color = self.colors.block_64
         if(size == 128):
-            color = color_constants.block_128
+            color = self.colors.block_128
         if(size == 256):
-            color = color_constants.block_256
+            color =self.colors.block_256
         if(size == 512):
-            color = color_constants.block_512
+            color = self.colors.block_512
         if(size == 1024):
-            color = color_constants.block_1024
+            color = self.colors.block_1024
         if(size == 2048):
-            color = color_constants.block_2048
+            color = self.colors.block_2048
         return color
 
     def destroy(self):
         self.size = 0
-        self.color = (204, 192, 179)
+        self.color = self.colors.block_E
     
     def set_color(self,color):
         self.color = color
@@ -59,7 +62,7 @@ class Block:
                         
                         while k > 5:
                             
-                            pygame.draw.rect(surface, self.find_color(board[i][j].size),pygame.Rect(pos[0],pos[1],k,k),2,3)
+                            pygame.draw.rect(surface, self.find_color(board[i][j].size, self.dMode),pygame.Rect(pos[0],pos[1],k,k),2,3)
                             k -=1
                         
                             
@@ -67,7 +70,7 @@ class Block:
                         width = sized_rect.width
                         height = sized_rect.height
                         sized_rect.center = (pos[0]+(60-width)/2,pos[1]+(60-height)/2)
-                        sized = Font.render_to(surface, sized_rect.center, str(board[i][j].size), (0,0,0))
+                        sized = Font.render_to(surface, sized_rect.center, str(board[i][j].size), self.colors.letter)
                             #surface.blit(sized, (pos[0]+(60-width)/2,pos[1]+(60-height)/2) )
 
                     self.repaint(surface, board)
@@ -76,7 +79,7 @@ class Block:
             swidth = score_rect.width
             sheight = score_rect.height
             score_rect.center = (245+(100-swidth)/2,43+(30-sheight)/2)
-            scored = Font.render_to(scoreSurface, score_rect.center, str(score), (0,0,0))
+            scored = Font.render_to(scoreSurface, score_rect.center, str(score), self.colors.letter)
             
     def repaint(self,surface,board):
         for i in range(len(board)):
@@ -87,11 +90,11 @@ class Block:
                     pos = self.decrypt(j, i)
                     k=60
                     while k > 5:
-                        pygame.draw.rect(surface, (205,193,181),pygame.Rect(pos[0],pos[1],k,k),2,3)
+                        pygame.draw.rect(surface, self.colors.block_E,pygame.Rect(pos[0],pos[1],k,k),2,3)
                         k -=1
     def repaintSurface(self,surface):
         scoreboard = pygame.Rect(245,40,100,30)
-        self.round_rect(surface, scoreboard, 4,(187,173,160))
+        self.round_rect(surface, scoreboard, 4, self.colors.scoreboard)
 
     def decrypt(self, i,j):
         return (i*75+8,j*75+8)

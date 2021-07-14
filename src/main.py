@@ -3,6 +3,8 @@ from tkinter import *
 import tkinter
 import os
 
+from pygame.display import mode_ok
+from color_constants import Colors
 from pygame.constants import QUIT
 from board import Board
 from block import Block
@@ -50,15 +52,15 @@ def find_best_move(board, amount):
 
     for inter, m in enumerate(possible_moves):
         for i in range(int(amount)):
-            simulation = Board()
+            simulation = Board(mode)
             simulation.board = copy.deepcopy(board)
             
             simulation.move(m)
-            simulation.add_block(Block(2 * random.randint(1,2), pg.Rect(0,0, 60, 60)))
+            simulation.add_block(Block(2 * random.randint(1,2), pg.Rect(0,0, 60, 60)), mode)
 
             while((simulation.game_over() == False)):
                 simulation.move(possible_moves[random.randint(0,3)])
-                simulation.add_block(Block(2 * random.randint(1,2), pg.Rect(0,0, 60, 60)))
+                simulation.add_block(Block(2 * random.randint(1,2), pg.Rect(0,0, 60, 60), mode))
 
 
             simScore[inter] += simulation.score
@@ -83,25 +85,27 @@ def QUIT():
 
 global amount_sims
 amount_sims = 0
+global mode
+mode = True
 def simulate(x = False):
 
     game_exit = False
     BLACK = (0 ,0, 0)
-
+    colors = Colors(mode)
     pg.init()
     surface = pg.display.set_mode((450, 450))
     clock = pg.time.Clock()
-    surface.fill((235, 230, 228))
+    surface.fill(colors.background)
     
 
 
     board = pg.Surface((300, 300))
 
-    board.fill((235, 230, 228))
+    board.fill(colors.background)
     rect = pg.Rect(0,0,300,300)
-    round_rect(board,rect, 10,(187,173,160))
+    round_rect(board,rect, 10,(colors.scoreboard))
     scoreboard = pg.Rect(245,40,100,30)
-    round_rect(surface, scoreboard, 4,(187,173,160))
+    round_rect(surface, scoreboard, 4, colors.scoreboard)
 
 
 
@@ -111,7 +115,7 @@ def simulate(x = False):
     Font = pg.freetype.SysFont('Sans', 50)
     lblrect = Font.get_rect("2048")
     lblrect.center = (85,30)
-    lbled = Font.render_to(surface, lblrect.center, "2048", (205,193,181))
+    lbled = Font.render_to(surface, lblrect.center, "2048", colors.letter)
 
 
 
@@ -120,14 +124,14 @@ def simulate(x = False):
 
 
 
-    act_board = Board() 
+    act_board = Board(mode) 
     play = x
 
     for i in range(4):
         for j in range(4):
             k=60
             while k > 5:
-                pg.draw.rect(board, (205,193,181),pg.Rect((j*75)+8, (i*75)+8, k,k),2,3)
+                pg.draw.rect(board, colors.block_E,pg.Rect((j*75)+8, (i*75)+8, k,k),2,3)
                 k -= 1
 
 
@@ -142,16 +146,16 @@ def simulate(x = False):
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_LEFT:
                     act_board.shift_left()
-                    act_board.add_block(Block(2 * random.randint(1,2), pg.Rect(0,0, 60, 60)))
+                    act_board.add_block(Block(2 * random.randint(1,2), pg.Rect(0,0, 60, 60), mode))
                 if event.key == pg.K_RIGHT:
                     act_board.shift_right()
-                    act_board.add_block(Block(2 * random.randint(1,2), pg.Rect(0,0, 60, 60)))
+                    act_board.add_block(Block(2 * random.randint(1,2), pg.Rect(0,0, 60, 60), mode))
                 if event.key == pg.K_DOWN:
                     act_board.shift_vertical(False)
-                    act_board.add_block(Block(2 * random.randint(1,2), pg.Rect(0,0, 60, 60)))
+                    act_board.add_block(Block(2 * random.randint(1,2), pg.Rect(0,0, 60, 60), mode))
                 if event.key == pg.K_UP:
                     act_board.shift_vertical(True)
-                    act_board.add_block(Block(2 * random.randint(1,2), pg.Rect(0,0, 60, 60)))
+                    act_board.add_block(Block(2 * random.randint(1,2), pg.Rect(0,0, 60, 60), mode))
                 if event.key == pg.K_c:
                     act_board.clear()
 
@@ -159,7 +163,7 @@ def simulate(x = False):
         if(not play):
             l = find_best_move(act_board.board, amount_sims)
             act_board.move(l)
-            act_board.add_block(Block(2 * random.randint(1,2), pg.Rect(0,0, 60, 60)))
+            act_board.add_block(Block(2 * random.randint(1,2), pg.Rect(0,0, 60, 60), mode))
 
         surface.blit(board, (75, 75))
 

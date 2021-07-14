@@ -2,20 +2,20 @@ import random, pygame
 from block import Block
 class Board():
 
-    def __init__(self):
-        self.board = self.create_board()
+    def __init__(self, mode):
+        self.board = self.create_board(mode)
         self.score = 0
     def printb(self):
         for i in range(4):
             print(str(i+1) + "| ", *self.board[i], sep=' ')
-    def create_board(self):
+    def create_board(self, mode):
         board1 =[[0,0,0,0],
                 [0,0,0,0],
                 [0,0,0,0],
                 [0,0,0,0]]
-        board1[random.randint(0,3)][random.randint(0,3)] = Block(4,pygame.Rect(0,0, 60, 60))
-        board1[random.randint(0,3)][random.randint(0,3)] = Block(2,pygame.Rect(0,0, 60, 60))
-        board1[random.randint(0,3)][random.randint(0,3)] = Block(2,pygame.Rect(0,0, 60, 60))
+        board1[random.randint(0,3)][random.randint(0,3)] = Block(4,pygame.Rect(0,0, 60, 60), mode)
+        board1[random.randint(0,3)][random.randint(0,3)] = Block(2,pygame.Rect(0,0, 60, 60), mode)
+        board1[random.randint(0,3)][random.randint(0,3)] = Block(2,pygame.Rect(0,0, 60, 60), mode)
         return board1
     def clear(self):
         self.board =[[0,0,0,0],
