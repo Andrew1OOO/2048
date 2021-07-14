@@ -42,7 +42,7 @@ def find_best_move(board, amount):
     totalSims = amount
 
     simScore = [0,0,0,0]
-    inter = 0
+    inter = 0  
     for i in range(int(totalSims)):
         #print("New simulation")
         if(inter == 4):
@@ -168,13 +168,13 @@ def game():
 
 
 root = tkinter.Tk()
-embed = tk.Frame(root, width = 500, height = 300)
-embed.grid(columnspan = (600), rowspan = 500) 
-embed.pack(side = tk.LEFT) 
-buttonwin = tk.Frame(root, width = 75, height = 500)
-buttonwin.pack(side = tk.LEFT)
 
-lbl=Label(root, text="2048 Monte Carlo Simulations", fg='black', font=("Ariel", 16))
+root.geometry('400x300')
+
+buttonwin = tk.Frame(root, width = 75, height = 500)
+buttonwin.pack(side = LEFT)
+
+lbl=Label(root, text="2048 Monte Carlo Simulation", fg='black', font=("Ariel", 16))
 lbl.place(x=60, y=50)
 root.title('2048 Monte Carlo Simulations')
 
@@ -182,17 +182,21 @@ def change_amount(x):
     x = txtfld.get()
     global amount_sims
     amount_sims = x
+    lbl=Label(root, text=str(amount_sims) + " simulations", fg='black', font=("Ariel", 11))
+    lbl.place(x=140, y=181)
+
 
 txtfld = Entry(root)
 txtfld.bind('<Return>', change_amount)
 txtfld.place(x=80, y=150)
 
 
-button1 = Button(buttonwin,text = 'Quit',  command=QUIT)
-button1.pack(side=LEFT, padx=15, pady=20)
 
-button2 = Button(buttonwin,text = '2048~AI',  command=game)
-button2.pack(side=RIGHT, padx=15, pady=20)
+button1 = Button(root,text = 'Quit',  command=QUIT)
+button1.place(x=360, y=5)
+
+button2 = Button(root,text = '2048~AI',  command=game)
+button2.place(x=80, y=180)
 
 
 root.mainloop()
