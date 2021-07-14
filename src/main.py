@@ -9,6 +9,7 @@ from block import Block
 import copy
 import random
 import pygame as pg
+import pygame.freetype
 
 
 def round_rect(surf, rect, rad, color, thick=0):
@@ -18,7 +19,9 @@ def round_rect(surf, rect, rad, color, thick=0):
 		rad = min(rect.width/2, rect.height/2)
 
 	if thick > 0:
+        
 		r = rect.copy()
+        
 		x, r.x = r.x, 0
 		y, r.y = r.y, 0
 		buf = pg.surface.Surface((rect.width, rect.height)).convert_alpha()
@@ -30,36 +33,35 @@ def round_rect(surf, rect, rad, color, thick=0):
 
 
 	else:
+        
 		r  = rect.inflate(-rad * 2, -rad * 2)
 		for corn in (r.topleft, r.topright, r.bottomleft, r.bottomright):
 			pg.draw.circle(surf, color, corn, rad)
+            
 		pg.draw.rect(surf, color, r.inflate(rad*2, 0))
 		pg.draw.rect(surf, color, r.inflate(0, rad*2))
 
 
 def find_best_move(board, amount):
     possible_moves = ["L", "R", "U", "D"]
-    totalSims = amount
+    
 
     simScore = [0,0,0,0]
-    inter = 0  
-    for i in range(int(totalSims)):
-        #print("New simulation")
-        if(inter == 4):
-            inter = 0
-        simulation = Board()
-        simulation.board = copy.deepcopy(board)
-        
-        simulation.move(possible_moves[inter])
-        simulation.add_block(Block(2 * random.randint(1,2), pg.Rect(0,0, 60, 60)))
 
-        while((simulation.game_over() == False)):
-            simulation.move(possible_moves[random.randint(0,3)])
+    for inter, m in enumerate(possible_moves):
+        for i in range(int(amount)):
+            simulation = Board()
+            simulation.board = copy.deepcopy(board)
+            
+            simulation.move(m)
             simulation.add_block(Block(2 * random.randint(1,2), pg.Rect(0,0, 60, 60)))
 
+            while((simulation.game_over() == False)):
+                simulation.move(possible_moves[random.randint(0,3)])
+                simulation.add_block(Block(2 * random.randint(1,2), pg.Rect(0,0, 60, 60)))
 
-        simScore[inter] += simulation.get_score()
-        inter += 1
+
+            simScore[inter] += simulation.score
     topScore = max(simScore)
     #print("SimScore",simScore)
     #print("possile",possible_moves)
@@ -81,7 +83,7 @@ def QUIT():
 
 global amount_sims
 amount_sims = 0
-def game():
+def simulate(x = False):
 
     game_exit = False
     BLACK = (0 ,0, 0)
@@ -89,22 +91,27 @@ def game():
     pg.init()
     surface = pg.display.set_mode((450, 450))
     clock = pg.time.Clock()
-    blue = (115, 147, 179)
-
+    surface.fill((235, 230, 228))
+    
 
 
     board = pg.Surface((300, 300))
 
-    #board.fill((146 ,146, 146))
-
+    board.fill((235, 230, 228))
     rect = pg.Rect(0,0,300,300)
-    round_rect(board,rect, 10,(100,100,100))
+    round_rect(board,rect, 10,(187,173,160))
+    scoreboard = pg.Rect(245,40,100,30)
+    round_rect(surface, scoreboard, 4,(187,173,160))
+
+
+
     surface.blit(board, (75, 75))
 
-    pos = (-5,0)
 
-
-
+    Font = pg.freetype.SysFont('Sans', 50)
+    lblrect = Font.get_rect("2048")
+    lblrect.center = (85,30)
+    lbled = Font.render_to(surface, lblrect.center, "2048", (205,193,181))
 
 
 
@@ -114,13 +121,13 @@ def game():
 
 
     act_board = Board() 
-    play = False
+    play = x
 
     for i in range(4):
         for j in range(4):
             k=60
             while k > 5:
-                pg.draw.rect(board, (146,146,146),pg.Rect((j*75)+8, (i*75)+8, k,k),2,3)
+                pg.draw.rect(board, (205,193,181),pg.Rect((j*75)+8, (i*75)+8, k,k),2,3)
                 k -= 1
 
 
@@ -157,8 +164,8 @@ def game():
         surface.blit(board, (75, 75))
 
 
-        act_board.paint(board)
-
+        act_board.paint(board,surface)
+        
 
         pg.display.update()
         
@@ -166,6 +173,8 @@ def game():
         clock.tick(30)
 
 
+def game():
+    simulate(True)
 
 root = tkinter.Tk()
 
@@ -177,6 +186,9 @@ buttonwin.pack(side = LEFT)
 lbl=Label(root, text="2048 Monte Carlo Simulation", fg='black', font=("Ariel", 16))
 lbl.place(x=60, y=50)
 root.title('2048 Monte Carlo Simulations')
+
+lbl=Label(root, text=str(amount_sims) + " simulations", fg='black', font=("Ariel", 11))
+lbl.place(x=140, y=181)
 
 def change_amount(x):
     x = txtfld.get()
@@ -195,8 +207,11 @@ txtfld.place(x=80, y=150)
 button1 = Button(root,text = 'Quit',  command=QUIT)
 button1.place(x=360, y=5)
 
-button2 = Button(root,text = '2048~AI',  command=game)
+button2 = Button(root,text = 'Simulate',  command=simulate)
 button2.place(x=80, y=180)
+
+button3 = Button(root,text = 'Play Game',  command=game)
+button3.place(x=80, y=230)
 
 
 root.mainloop()

@@ -4,7 +4,7 @@ class Board():
 
     def __init__(self):
         self.board = self.create_board()
-        
+        self.score = 0
     def printb(self):
         for i in range(4):
             print(str(i+1) + "| ", *self.board[i], sep=' ')
@@ -32,13 +32,15 @@ class Board():
                 self.board[rand_pos[0]][rand_pos[1]] = block 
                 return True
 
-    def paint(self, surface):
+    def paint(self, surface, scoreSurface):
         for i in range(len(self.board)):
             for j in range(len(self.board[0])):
                 if(self.board[i][j] != 0):
-                    self.board[i][j].draw(surface,self.board)
+                    self.board[i][j].draw(surface,self.board, scoreSurface, self.score)
+                    break
 
     def shift_left(self):
+        
         for i in range(len(self.board)):
             v=[]
             w=[]
@@ -51,6 +53,7 @@ class Board():
                 if(j < len(v) - 1 and v[j].size == v[j+1].size):
                     v[j].set_size(v[j].size*2)
                     w.append(v[j])
+                    self.score += v[j].size
                     j+=1
                 else:
                     w.append(v[j])
@@ -81,6 +84,7 @@ class Board():
                 if (j < len(v) - 1 and v[j].size == v[j + 1].size):
                     v[j].set_size(v[j].size*2)
                     w.append(v[j])
+                    self.score += v[j].size
                     j += 1
                     
                 else:
@@ -97,7 +101,7 @@ class Board():
             for it in w:
                 self.board[i][j] = it
                 j -= 1
-
+        
     def shift_vertical(self, up):
         if(up):
             for i in range(len(self.board)):
@@ -118,6 +122,7 @@ class Board():
                     if (j < len(v) - 1 and v[j].size == v[j + 1].size):
                         v[j].set_size(v[j].size*2)
                         w.append(v[j])
+                        self.score += v[j].size
                         j += 1
                     
                     else:
@@ -150,6 +155,7 @@ class Board():
                         v[j].set_size(v[j].size*2)
 
                         w.append(v[j])
+                        self.score += v[j].size
                         j += 1
                     
                     else:
@@ -165,6 +171,7 @@ class Board():
                 for it in w:
                     self.board[j][i] = it
                     j -= 1
+
     def move(self, move):
         if move == "L":
             self.shift_left()
@@ -219,11 +226,3 @@ class Board():
     
         return True
     
-
-    def get_score(self):
-        score = 0
-        for i in range(len(self.board)):
-            for j in range(len(self.board)):
-                if self.board[i][j] != 0:
-                    score += self.board[i][j].size
-        return score
